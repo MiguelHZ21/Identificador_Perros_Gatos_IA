@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 # -----------------------------
 # CARGAR DATASET
 # -----------------------------
-ruta_dataset = r"D:\Universidad\9Noveno Semestre\Inteligencia Artificial\Archivos Unidad 1\Reconocimiento de animales\_env2\datos_etiquetados_21_02_26.pickle"
+ruta_dataset = r"D:\Universidad\9Noveno Semestre\Inteligencia Artificial\Archivos Unidad 1\Reconocimiento de animales\datos_etiquetados_21_02_26_aumentado.pickle"
 
 with open(ruta_dataset, "rb") as handle:
     X, y = pickle.load(handle)
@@ -66,7 +66,7 @@ loss='categorical_crossentropy',
 metrics=['accuracy'])
 
 # Entrenar el modelo
-history_mlp = model_mlp.fit(X_train, y_train, epochs=100, validation_split=0.2, callbacks=[EarlyStopping(monitor='val_loss', patience=50)])
+history_mlp = model_mlp.fit(X_train, y_train, epochs=100, validation_split=0.2, callbacks=[EarlyStopping(monitor='val_loss', patience=10)])
 
 # -----------------------------
 # EVALUACIÓN FINAL
