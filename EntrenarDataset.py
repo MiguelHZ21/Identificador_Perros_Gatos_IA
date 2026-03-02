@@ -7,6 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten,Conv2D, MaxPooling2D
 from tensorflow.keras.callbacks import EarlyStopping
 
+from tensorflow.keras.preprocessing import image
 # -----------------------------
 # CARGAR DATASET
 # -----------------------------
@@ -50,9 +51,9 @@ model_mlp = Sequential([
     #Dense(1024, activation='relu'),
     #Dense(512, activation='relu'),
     #Dense(2, activation='softmax')
-    Conv2D(512, (3,3), activation='relu', input_shape=(100,100,3)),
+    Conv2D(128, (3,3), activation='relu', input_shape=(100,100,3)),
     MaxPooling2D((2,2)),
-    Conv2D(256, (3,3), activation='relu'),
+    Conv2D(128, (3,3), activation='relu'),
     MaxPooling2D((2,2)),
     Conv2D(128, (3,3), activation='relu'),
     MaxPooling2D((2,2)),
@@ -73,3 +74,40 @@ history_mlp = model_mlp.fit(X_train, y_train, epochs=100, validation_split=0.2, 
 # -----------------------------
 loss, acc = model_mlp.evaluate(X_test, y_test)
 print(f"Accuracy en test: {acc:.4f}")
+
+
+# Ruta de la imagen nueva
+ruta_imagen = r"D:\Universidad\9Noveno Semestre\Inteligencia Artificial\Archivos Unidad 1\Reconocimiento de animales\imagen.jpg"
+
+# -----------------------------
+# CARGAR Y PREPROCESAR IMAGEN
+# -----------------------------
+img = image.load_img(ruta_imagen, target_size=(100, 100))
+img_array = image.img_to_array(img)
+
+# Normalizar igual que en entrenamiento
+img_array = img_array / 255.0
+
+# Agregar dimensión batch (1, 100, 100, 3)
+img_array = np.expand_dims(img_array, axis=0)
+
+# -----------------------------
+# PREDICCIÓN
+# -----------------------------
+pred = model_mlp.predict(img_array)
+
+print("Predicción cruda:", pred)
+
+# Clase predicha
+clase = np.argmax(pred)
+
+# Etiquetas (ajusta según tu dataset)
+labels = ["Gato", "Perro"]
+
+print("La imagen es:", labels[clase])
+
+# Mostrar imagen
+plt.imshow(img)
+plt.title(f"Predicción: {labels[clase]}")
+plt.axis("off")
+plt.show()
